@@ -49,5 +49,18 @@ public class BoardController {
 		
 		return count;	
 	}
-
+	
+	@GetMapping("/detailBoard")
+	public Board detailBoard(String idx) {
+		Board board = mapper.detailBoard(idx);
+		
+		return board;
+	}
+	
+	@ResponseBody
+	@GetMapping("/deleteBoard")
+	public int deleteBoard(String idx) {
+		
+		return  mapper.boardDelete(idx);
+	}
 }

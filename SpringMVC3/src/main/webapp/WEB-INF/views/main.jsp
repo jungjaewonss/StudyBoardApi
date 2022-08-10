@@ -19,6 +19,9 @@
   		loadList();
   	})
   	
+  	
+  	
+  	
   	function loadList(){
   		// 서버와 통신 : 게시판 리스트 가져오기 
   		$.ajax({
@@ -46,11 +49,22 @@
   		$.each(data , function(index,obj){
   			listHtml += "<tr>"
   	  			listHtml += "<td>"+obj.idx+"</td>"
-  	  			listHtml += "<td>"+obj.title+"</td>"
+  	  			listHtml += "<td><a  href = 'javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>"
   	  			listHtml += "<td>"+obj.writer+"</td>"
   	  			listHtml += "<td>"+obj.indate+"</td>"
   	  			listHtml += "<td>"+obj.count+"</td>"
   	  		listHtml += "<tr/>"
+  	  		
+  	  		var contentid = "content" + obj.idx;
+  	  		listHtml += "<tr style = 'display:none' id = "+contentid+" >"
+  	  		listHtml += "<td>내용</td>"
+  	  		listHtml += "<td colspan='4'>"
+  	  		listHtml += "<textarea rows='7' class = 'form-control' readonly>"+obj.content+"</textarea>"
+  	  		listHtml += "<br>"
+  	  		listHtml += "<button class = 'btn btn-primary btn-sm'>수정하기</button>&nbsp"
+  	  		listHtml += "<button class = 'btn btn-primary btn-sm' onclick='goDelete("+obj.idx+")'>삭제하기</button>"
+  	  		listHtml += "</td>"
+  	  		listHtml += "</tr>"
   		});
   		
   		listHtml+= "<tr>";
@@ -61,6 +75,22 @@
   		listHtml+="</table>";
   		
   		$("#view").html(listHtml); // id 가 view인 것에 접근해서 html 을 집어넣겠다
+  	}
+  	
+  	
+  	function goDelete(idx){
+  		$.ajax({
+  			url : "deleteBoard",
+  			type : "get",
+  			data : {"idx" : idx},
+  			dataType : "json",
+  			success : function(value){
+  				if(value > 0) {
+  					alert('삭제완료');
+  					location.reload();
+  				}
+  			}
+  		})
   	}
   	
   	function goForm(){
@@ -76,7 +106,7 @@
   	}
   	
   	function insertBoard(){
-  		var fData = $("#frm").serialize();
+  		var fData = $("#frm").serialize(); // form 에있는 모튼 데이터를 파라미터형식으로 일렬로 저장가능
   		
   		
   		
@@ -95,7 +125,25 @@
   				alert('error');
   			}
   		})
+  		
+  		// form 초기화
+  		$("#resetButton").click();
+  		// $("#resetButton").trigger("click");  //트리거로 클릭도가능
+  		
   	}
+  	
+   function goContent(idx){
+	 	
+	   if($("#content" + idx).css("display") == 'none'){
+		   var idxs = "content"+idx;
+		   $('#' + idxs).css("display" , "table-row"); // tr일경우 block 이아닌 display 속성을 table-row 로주면 colspan 이먹힌다.
+	   }
+	   else{
+		   var idxs = "content"+idx;
+		   $('#' + idxs).css("display" , "none"); // tr일경우 block 이아닌 display 속성을 table-row 로주면 colspan 이먹힌다.
+	   }
+	 	
+   }
   	
   </script>
 </head>
@@ -132,7 +180,7 @@
     		<tr>
     			<td colspan="2" align="center">
     				<button type = "submit" class = "btn btn-success btn-sm" onclick = "insertBoard()">등록</button>
-    				<button type = "reset" class = "btn btn-warning btn-sm">취소</button>
+    				<button type = "reset" class = "btn btn-warning btn-sm" id = "resetButton">취소</button>
     				<button type = "button" class = "btn btn-primary btn-sm" onclick = "goList()">목록보기</button>
     			</td>
     			
