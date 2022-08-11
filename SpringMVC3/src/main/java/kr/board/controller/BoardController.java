@@ -63,4 +63,13 @@ public class BoardController {
 		
 		return  mapper.boardDelete(idx);
 	}
+	
+	@ResponseBody
+	@GetMapping("updateBoard")
+	public void updateBoard(Board board) {
+		
+		System.out.println(board);
+		
+		mapper.boardUpdate(board);
+	}
 }

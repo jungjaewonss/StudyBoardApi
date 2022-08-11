@@ -49,7 +49,7 @@
   		$.each(data , function(index,obj){
   			listHtml += "<tr>"
   	  			listHtml += "<td>"+obj.idx+"</td>"
-  	  			listHtml += "<td><a  href = 'javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>"
+  	  			listHtml += "<td id='t"+obj.idx+"'><a  href = 'javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>"
   	  			listHtml += "<td>"+obj.writer+"</td>"
   	  			listHtml += "<td>"+obj.indate+"</td>"
   	  			listHtml += "<td>"+obj.count+"</td>"
@@ -59,9 +59,9 @@
   	  		listHtml += "<tr style = 'display:none' id = "+contentid+" >"
   	  		listHtml += "<td>내용</td>"
   	  		listHtml += "<td colspan='4'>"
-  	  		listHtml += "<textarea rows='7' class = 'form-control' readonly>"+obj.content+"</textarea>"
+  	  		listHtml += "<textarea rows='7' id='textareaContent"+obj.idx+"' class = 'form-control' readonly>"+obj.content+"</textarea>"
   	  		listHtml += "<br>"
-  	  		listHtml += "<button class = 'btn btn-primary btn-sm'>수정하기</button>&nbsp"
+  	  		listHtml += "<span id='changeButton"+obj.idx+"'><button class = 'btn btn-primary btn-sm' onclick='goUpdateForm("+obj.idx+")'>수정화면</button></span>&nbsp"
   	  		listHtml += "<button class = 'btn btn-primary btn-sm' onclick='goDelete("+obj.idx+")'>삭제하기</button>"
   	  		listHtml += "</td>"
   	  		listHtml += "</tr>"
@@ -75,6 +75,43 @@
   		listHtml+="</table>";
   		
   		$("#view").html(listHtml); // id 가 view인 것에 접근해서 html 을 집어넣겠다
+  	}
+  	
+  	
+  	function goUpdateForm(idx){
+  		$("#textareaContent" + idx).attr('readonly',false);
+  		
+  		
+  		var title = $("#t" + idx).text();
+  		
+  		var newInput = "<input type = 'text' class = 'form-control' id='newTitle"+idx+"' value = '"+title+"'/>";
+  		$("#t" + idx).html(newInput);
+  		
+  		
+  		
+  		
+  		var newButton = "<button class = 'btn btn-info btn-sm' onclick='updateConten("+idx+")'>수정</button>";
+  		
+  		$("#changeButton" + idx).html(newButton);
+  	}
+  	
+  	function updateConten(idx){
+  		
+  		var updateTitle = $("#newTitle" + idx).val();
+  		var updateContent = $("#textareaContent" + idx).val();
+  		
+  		$.ajax({
+  			url : "updateBoard",
+  			tyle : "get",
+  			data : {"idx" : idx , "title" : updateTitle , "content" : updateContent},
+  			success : function(){
+  				alert('수정완료');
+  				location.reload();
+  			},
+  			error : function(){
+  				alert('error');
+  			}
+  		})
   	}
   	
   	
@@ -133,14 +170,19 @@
   	}
   	
    function goContent(idx){
-	 	
+	  
+	   
 	   if($("#content" + idx).css("display") == 'none'){
 		   var idxs = "content"+idx;
 		   $('#' + idxs).css("display" , "table-row"); // tr일경우 block 이아닌 display 속성을 table-row 로주면 colspan 이먹힌다.
+		   $("#textareaContent" + idx).attr('readonly' , true); 
+		  
 	   }
 	   else{
 		   var idxs = "content"+idx;
 		   $('#' + idxs).css("display" , "none"); // tr일경우 block 이아닌 display 속성을 table-row 로주면 colspan 이먹힌다.
+		 
+		   
 	   }
 	 	
    }
