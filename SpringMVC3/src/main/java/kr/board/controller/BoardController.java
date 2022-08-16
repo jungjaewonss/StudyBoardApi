@@ -20,8 +20,7 @@ import kr.board.mapper.BoardMapper;
 @Controller
 public class BoardController {
 	
-	@Autowired
-	BoardMapper mapper;
+	
 	
 	@RequestMapping("/")
 	public String main(Model model) {
@@ -33,55 +32,5 @@ public class BoardController {
 		return "main";
 	}
 	
-	@RequestMapping("/boardList")
-	@ResponseBody
-	public List<Board> boardList(){
-		
-		List<Board> boardList = mapper.getListss();
-		
-		return boardList;
-	}
 	
-	@GetMapping("/boardWrite")
-	@ResponseBody
-	public int boardWrite(Board board , Model model) {
-		int count =  mapper.insertBoard(board);
-		
-		return count;	
-	}
-	
-	@GetMapping("/detailBoard")
-	@ResponseBody
-	public Board detailBoard(String idx) {
-		Board board = mapper.detailBoard(idx);
-		
-		return board;
-	}
-	
-	@ResponseBody
-	@GetMapping("/deleteBoard")
-	public int deleteBoard(String idx) {
-		
-		return  mapper.boardDelete(idx);
-	}
-	
-	@ResponseBody
-	@GetMapping("updateBoard")
-	public void updateBoard(Board board) {
-		
-		System.out.println(board);
-		
-		mapper.boardUpdate(board);
-	}
-	
-	@ResponseBody
-	@GetMapping("/updateCount") 
-	public Board updateCount(Board board) {
-		System.out.println(board + "=============================");
-		 mapper.addCount(board);
-		 
-		Board addcountBoard =  mapper.detailBoard(board.getIdx()+"");
-		
-		return addcountBoard;
-	}
 }

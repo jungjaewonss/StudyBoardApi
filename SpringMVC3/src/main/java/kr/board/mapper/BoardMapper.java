@@ -20,7 +20,4 @@ public interface BoardMapper {
 	int boardUpdate(Board board);
 	
 	int addCount(Board board);
-	
-	
-	
 }

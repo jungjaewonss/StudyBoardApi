@@ -19,3 +19,18 @@ values('게시판 연습','게시판 연습','선생님');
 
 
 select * from myboard order by idx desc;
+
+
+create table mem_tbl(
+ memIdx int auto_increment,
+ memId varchar(20) not null,
+ memPassword varchar(20) not null,
+ memName varchar(20) not null,
+ memAge int ,
+ memGender varchar(20),
+ memEmail varchar(50),
+ memProfile varchar(50),
+ primary key (memIdx)
+);
+
+select * from mem_tbl;

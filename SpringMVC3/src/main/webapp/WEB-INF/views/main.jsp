@@ -25,7 +25,7 @@
   	function loadList(){
   		// 서버와 통신 : 게시판 리스트 가져오기 
   		$.ajax({
-  			url : "boardList",
+  			url : "board/all",
   			type : "get",
   			dataType : "json", //데이터를 받을형식
   			success : makeView ,
@@ -101,8 +101,8 @@
   		var updateContent = $("#textareaContent" + idx).val();
   		
   		$.ajax({
-  			url : "updateBoard",
-  			tyle : "get",
+  			url : "board/update",
+  			tyle : "put",
   			data : {"idx" : idx , "title" : updateTitle , "content" : updateContent},
   			success : function(){
   				alert('수정완료');
@@ -117,9 +117,8 @@
   	
   	function goDelete(idx){
   		$.ajax({
-  			url : "deleteBoard",
-  			type : "get",
-  			data : {"idx" : idx},
+  			url : "board/" + idx,
+  			type : "delete",
   			dataType : "json",
   			success : function(value){
   				if(value > 0) {
@@ -148,8 +147,8 @@
   		
   		
   		$.ajax({
-  			url : "boardWrite",
-  			type : "get",
+  			url : "board/new",
+  			type : "post",
   			data : fData, // 직렬화한건그냥넘기네 
   			dataType : "json" ,
   			success : function(value){
@@ -175,8 +174,8 @@
 		   
 		    
 		   $.ajax({
-			   url : "detailBoard",
-			   tyle : "get",
+			   url : "board/" + idx,
+			   type : "get",
 			   data : {"idx" : idx},
 			   dataType : "json",
 			   success : function (value){	   		   
@@ -202,14 +201,12 @@
    
    function addCount(value){
 	  $.ajax({
-		   url : "updateCount",
-		   type : "get",
-		   data : {
-			   "idx" : value.idx , "count" : value.count
-			},
+		   url : "board/count",
+		   type : "put",
+		   data : JSON.stringify({"idx" : value.idx , "count" : value.count}),
+		   contentType : "application/json;charset=utf-8",
 		   dataTyle : "json",
 		   success : function(value){
-			   
 				$("#addcounts" + value.idx).text(value.count);
 		   },
 		   error : function(){
