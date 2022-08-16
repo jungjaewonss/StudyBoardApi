@@ -51,6 +51,7 @@ public class BoardController {
 	}
 	
 	@GetMapping("/detailBoard")
+	@ResponseBody
 	public Board detailBoard(String idx) {
 		Board board = mapper.detailBoard(idx);
 		
@@ -71,5 +72,16 @@ public class BoardController {
 		System.out.println(board);
 		
 		mapper.boardUpdate(board);
+	}
+	
+	@ResponseBody
+	@GetMapping("/updateCount") 
+	public Board updateCount(Board board) {
+		System.out.println(board + "=============================");
+		 mapper.addCount(board);
+		 
+		Board addcountBoard =  mapper.detailBoard(board.getIdx()+"");
+		
+		return addcountBoard;
 	}
 }

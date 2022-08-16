@@ -51,15 +51,15 @@
   	  			listHtml += "<td>"+obj.idx+"</td>"
   	  			listHtml += "<td id='t"+obj.idx+"'><a  href = 'javascript:goContent("+obj.idx+")'>"+obj.title+"</a></td>"
   	  			listHtml += "<td>"+obj.writer+"</td>"
-  	  			listHtml += "<td>"+obj.indate+"</td>"
-  	  			listHtml += "<td>"+obj.count+"</td>"
+  	  			listHtml += "<td>"+obj.indate.split(' ')[0]+"</td>"
+  	  			listHtml += "<td id='addcounts"+obj.idx+"'>"+obj.count+"</td>"
   	  		listHtml += "<tr/>"
   	  		
   	  		var contentid = "content" + obj.idx;
   	  		listHtml += "<tr style = 'display:none' id = "+contentid+" >"
   	  		listHtml += "<td>내용</td>"
   	  		listHtml += "<td colspan='4'>"
-  	  		listHtml += "<textarea rows='7' id='textareaContent"+obj.idx+"' class = 'form-control' readonly>"+obj.content+"</textarea>"
+  	  		listHtml += "<textarea rows='7' id='textareaContent"+obj.idx+"' class = 'form-control' readonly></textarea>"
   	  		listHtml += "<br>"
   	  		listHtml += "<span id='changeButton"+obj.idx+"'><button class = 'btn btn-primary btn-sm' onclick='goUpdateForm("+obj.idx+")'>수정화면</button></span>&nbsp"
   	  		listHtml += "<button class = 'btn btn-primary btn-sm' onclick='goDelete("+obj.idx+")'>삭제하기</button>"
@@ -169,23 +169,54 @@
   		
   	}
   	
-   function goContent(idx){
-	  
-	   
+   function goContent(idx){  
 	   if($("#content" + idx).css("display") == 'none'){
 		   var idxs = "content"+idx;
+		   
+		    
+		   $.ajax({
+			   url : "detailBoard",
+			   tyle : "get",
+			   data : {"idx" : idx},
+			   dataType : "json",
+			   success : function (value){	   		   
+				   $("#textareaContent" + idx).val(value.content);
+				   addCount(value);				   
+			   },
+			   error : function(){
+				   alert('통신에러');
+			   }
+		   })
+		   
 		   $('#' + idxs).css("display" , "table-row"); // tr일경우 block 이아닌 display 속성을 table-row 로주면 colspan 이먹힌다.
-		   $("#textareaContent" + idx).attr('readonly' , true); 
-		  
+		   $("#textareaContent" + idx).attr('readonly' , true); 	  
 	   }
 	   else{
 		   var idxs = "content"+idx;
 		   $('#' + idxs).css("display" , "none"); // tr일경우 block 이아닌 display 속성을 table-row 로주면 colspan 이먹힌다.
-		 
 		   
+		 
 	   }
-	 	
+	   
    }
+   
+   function addCount(value){
+	  $.ajax({
+		   url : "updateCount",
+		   type : "get",
+		   data : {
+			   "idx" : value.idx , "count" : value.count
+			},
+		   dataTyle : "json",
+		   success : function(value){
+			   
+				$("#addcounts" + value.idx).text(value.count);
+		   },
+		   error : function(){
+		   }
+	   })
+   }
+ 
   	
   </script>
 </head>
